@@ -1,0 +1,16 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Worktrees",
+  "outputfilename": "Worktrees",
+  "frontend:install": "",
+  "frontend:build": "",
+  "frontend:dir": "./frontend",
+  "author": {
+    "name": "modaniru"
+  },
+  "info": {
+    "productName": "Worktrees",
+    "productVersion": "0.1.0",
+    "comments": "Управление git worktree"
+  }
+}

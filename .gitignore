@@ -1,0 +1,6 @@
+build/bin/
+.DS_Store
+
+# CLAUDE.md исключён в глобальном gitignore — здесь его версионируем
+!CLAUDE.md
+/worktrees

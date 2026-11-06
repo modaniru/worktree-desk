@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worktrees</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- источники: группы и репозитории -->
+    <aside class="side">
+      <div class="drag" style="--wails-draggable: drag"></div>
+      <nav id="sources"></nav>
+      <div class="side-foot">
+        <button class="lnk add-root" data-act="add-root" title="Добавить папку, в которой лежат git-репозитории">＋ Добавить проект</button>
+        <span class="muted" id="fetch-info"></span>
+      </div>
+    </aside>
+
+    <!-- список ворктри -->
+    <section class="mid">
+      <header class="toolbar" style="--wails-draggable: drag">
+        <div class="tb-title">
+          <h1 id="list-title">Все ворктри</h1>
+          <div class="muted" id="list-sub"></div>
+        </div>
+        <div class="spacer"></div>
+        <div class="tb-tools" style="--wails-draggable: no-drag">
+          <select id="sort" title="Сортировка внутри репо">
+            <option value="git">Порядок git</option>
+            <option value="updated">Недавние</option>
+            <option value="stale">Давние</option>
+          </select>
+          <button class="tb" id="fetch-all-btn" title="git fetch --all во всех репо">⇣</button>
+          <button class="tb" id="refresh-btn" title="Обновить (⌘R)">↻</button>
+          <input id="search" type="search" placeholder="Поиск  ⌘F" />
+        </div>
+      </header>
+      <div class="legend" id="legend">
+        <span><i class="lg-bh"></i>новых коммитов в основной ветке</span>
+        <span><i class="lg-cf"></i>rebase даст конфликты</span>
+        <span><i class="lg-ah"></i>своих коммитов ветки</span>
+      </div>
+      <main id="content" tabindex="-1"><div class="empty">Загрузка…</div></main>
+    </section>
+
+    <!-- подробности выбранного -->
+    <aside class="insp" id="insp"></aside>
+  </div>
+
+  <div id="toasts"></div>
+
+  <!-- Добавление ворктри -->
+  <dialog id="add-dialog">
+    <form id="add-form" method="dialog">
+      <h2>Новый ворктри <span class="muted" id="add-repo-name"></span></h2>
+
+      <div class="seg" role="tablist">
+        <label><input type="radio" name="mode" value="new" checked /> <span>Новая ветка</span></label>
+        <label><input type="radio" name="mode" value="existing" /> <span>Существующая ветка</span></label>
+      </div>
+
+      <div class="field">
+        <label for="add-name">Название (необязательно)</label>
+        <input id="add-name" type="text" placeholder="например, «всякая всячина»" autocomplete="off" />
+        <div class="hint">Своё имя ворктри — привязано к папке, ветки внутри можно переключать как угодно.</div>
+      </div>
+      <div class="field mode-new">
+        <label for="add-branch">Имя ветки</label>
+        <input id="add-branch" type="text" placeholder="feature/something" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="field mode-new">
+        <label for="add-base">От чего ответвить</label>
+        <select id="add-base"></select>
+      </div>
+      <div class="field mode-existing" hidden>
+        <label for="add-existing">Ветка</label>
+        <select id="add-existing"></select>
+        <div class="hint">Ветки, уже открытые в другом ворктри, недоступны. Удалённая ветка будет взята с трекингом.</div>
+      </div>
+      <div class="field">
+        <label for="add-path">Путь</label>
+        <input id="add-path" type="text" spellcheck="false" />
+      </div>
+      <label class="check"><input id="add-open" type="checkbox" checked /> Открыть в VS Code после создания</label>
+
+      <div class="actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn primary" id="add-submit">Создать</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Название ворктри -->
+  <dialog id="name-dialog">
+    <form id="name-form" method="dialog">
+      <h2>Название ворктри</h2>
+      <p class="muted mono" id="name-path"></p>
+      <div class="field">
+        <input id="name-input" type="text" placeholder="пусто — показывать ветку" autocomplete="off" />
+      </div>
+      <div class="actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn primary">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Удаление ворктри (одного или нескольких) -->
+  <dialog id="rm-dialog">
+    <form id="rm-form" method="dialog">
+      <h2 id="rm-title">Удалить ворктри?</h2>
+      <ul id="rm-list" class="rm-list"></ul>
+      <div id="rm-dirty" class="warn" hidden></div>
+      <label class="check" id="rm-force-wrap"><input id="rm-force" type="checkbox" /> Принудительно (потерять незакоммиченные изменения / снять lock)</label>
+      <label class="check" id="rm-branch-wrap"><input id="rm-delete-branch" type="checkbox" /> Удалить и ветки</label>
+      <div class="actions">
+        <button type="button" class="btn" data-close>Отмена</button>
+        <button type="submit" class="btn danger" id="rm-submit">Удалить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
