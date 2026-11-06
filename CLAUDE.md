@@ -14,6 +14,7 @@ macOS-приложение на Wails v2 для управления `git worktr
 | `frontend/dist/`     | интерфейс: `index.html`, `style.css`, `app.js` — без сборки и зависимостей |
 | `frontend/wailsjs/`  | генерируется `wails build` / `wails dev`, руками не править                 |
 | `*_test.go`          | тесты на настоящих временных git-репозиториях                               |
+| `.github/workflows/build.yml` | CI: gofmt, vet, тесты, универсальная сборка; на тег `v*` — релиз с zip |
 
 - Фронт вызывает Go через `window.go.main.App.<Метод>()` (прокси `api` в `app.js`).
   Новый публичный метод `App` сразу доступен фронту после пересборки.

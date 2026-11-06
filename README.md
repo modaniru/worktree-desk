@@ -59,7 +59,21 @@ VS Code (берётся из `storage.json` VS Code, без запроса пр�
 | ⌘F             | поиск                                     |
 | ⌘R             | обновить                                  |
 
-## Требования
+## Установка
+
+Готовая сборка (Apple Silicon и Intel) — в [Releases](https://github.com/modaniru/worktree-desk/releases):
+скачать `Worktrees-*-macos.zip`, распаковать и перенести `Worktrees.app` в `/Applications`.
+
+Приложение не подписано сертификатом Apple Developer, поэтому при первом запуске
+macOS скажет, что не может проверить разработчика. Снять карантин:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Worktrees.app
+```
+
+или открыть через правый клик → «Открыть».
+
+## Требования для сборки
 
 - macOS (меню-бар написан на Cocoa через cgo);
 - Go 1.27+ и Xcode Command Line Tools (`xcode-select --install`);
@@ -78,6 +92,19 @@ make test      # go test ./...
 ```
 
 Фронт лежит в `frontend/dist` как есть — npm и сборка не нужны.
+
+## Выпуск версии
+
+CI (`.github/workflows/build.yml`) на каждый пуш в `master` и PR гоняет тесты и
+собирает приложение. Чтобы выпустить релиз, достаточно запушить тег:
+
+```sh
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+Workflow подставит версию из тега в `wails.json`, соберёт универсальный `.app`
+и создаст релиз с архивом и списком изменений.
 
 ## Где хранятся настройки
 
